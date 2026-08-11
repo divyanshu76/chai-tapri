@@ -87,8 +87,8 @@ export function useYouTubePlayer({ onSongChange, enabled = true }) {
     event.target.setVolume(volume);
     
     const playlistId = 'PLMRKdK25AuPVjHl9Kdb-gkBy0Cm7Zi2xo';
-    event.target.loadPlaylist({ listType: 'playlist', list: playlistId });
-    // Note: Do not pause immediately if we want to respect the first user gesture.
+    event.target.cuePlaylist({ listType: 'playlist', list: playlistId });
+    // Note: Do not play immediately, wait for user gesture.
     
     setIsReady(true);
     setError(null);

@@ -25,7 +25,35 @@ export default function TimeDisplay() {
   const mood = getMood(h);
 
   return (
-    <div style={{ textAlign: 'right' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end', gap: '12px' }}>
+      {/* Instagram Icon */}
+      <a
+        href="https://www.instagram.com/truly_divyanshu/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram — @truly_divyanshu"
+        style={{
+          color: '#FFF4DF',
+          opacity: 0.7,
+          marginTop: '2px', // align visually with the time text
+          outline: 'none',
+          transition: 'opacity 0.2s, transform 0.2s',
+          display: 'block'
+        }}
+        onFocus={(e) => { e.currentTarget.style.opacity = 1; e.currentTarget.style.transform = 'scale(1.05)'; }}
+        onBlur={(e) => { e.currentTarget.style.opacity = 0.7; e.currentTarget.style.transform = 'scale(1)'; }}
+        onMouseEnter={(e) => { e.currentTarget.style.opacity = 1; e.currentTarget.style.transform = 'scale(1.05)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.opacity = 0.7; e.currentTarget.style.transform = 'scale(1)'; }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </a>
+
+      {/* Time & Mood */}
+      <div style={{ textAlign: 'right' }}>
       {/* Time */}
       <div style={{
         fontSize: 'clamp(0.8rem, 2.5vw, 1rem)',
@@ -63,6 +91,7 @@ export default function TimeDisplay() {
         textShadow: '0 1px 6px rgba(0,0,0,0.6)',
       }}>
         {mood}
+      </div>
       </div>
     </div>
   );

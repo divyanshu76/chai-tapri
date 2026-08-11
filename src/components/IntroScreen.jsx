@@ -10,15 +10,14 @@ export default function IntroScreen({ isReady, onEnter }) {
   const [showTapPrompt, setShowTapPrompt] = useState(false);
 
   useEffect(() => {
-    // If YouTube is ready, we show the prompt to tap to enter
-    // This handles any autoplay restrictions gracefully
+    // If YouTube is ready, automatically enter after 2 seconds
     if (isReady) {
       const timer = setTimeout(() => {
-        setShowTapPrompt(true);
-      }, 300); // Small delay to ensure smooth transition
+        onEnter();
+      }, 2000); 
       return () => clearTimeout(timer);
     }
-  }, [isReady]);
+  }, [isReady, onEnter]);
 
   return (
     <motion.div
@@ -37,10 +36,7 @@ export default function IntroScreen({ isReady, onEnter }) {
         background: 'var(--c-bg)', // Warm cream
         gap: 0,
         padding: '2rem',
-        cursor: showTapPrompt ? 'pointer' : 'default',
-      }}
-      onClick={() => {
-        if (showTapPrompt) onEnter();
+        cursor: 'default',
       }}
     >
       {/* Cup emoji */}
@@ -110,43 +106,22 @@ export default function IntroScreen({ isReady, onEnter }) {
       {/* Status indicator */}
       <div style={{ height: '30px' }}>
         <AnimatePresence mode="wait">
-          {!showTapPrompt ? (
-            <motion.p
-              key="loading"
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.3 }}
-              style={{
-                fontFamily: 'var(--font-ui)',
-                fontSize: '0.85rem',
-                color: 'var(--c-brown-mid)',
-                opacity: 0.7,
-                animation: 'pulse 1.5s infinite',
-              }}
-            >
-              Tapri khul rahi hai...
-            </motion.p>
-          ) : (
-            <motion.p
-              key="ready"
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              style={{
-                fontFamily: 'var(--font-ui)',
-                fontSize: '0.9rem',
-                fontWeight: 700,
-                color: 'var(--c-brown)',
-                background: 'rgba(107, 74, 53, 0.08)',
-                padding: '0.4rem 1.2rem',
-                borderRadius: '20px',
-                border: '1px solid rgba(107, 74, 53, 0.15)',
-              }}
-            >
-              Radio ko ek tap chahiye.
-            </motion.p>
-          )}
+          <motion.p
+            key="loading"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              fontFamily: 'var(--font-ui)',
+              fontSize: '0.85rem',
+              color: 'var(--c-brown-mid)',
+              opacity: 0.7,
+              animation: 'pulse 1.5s infinite',
+            }}
+          >
+            Tapri khul rahi hai...
+          </motion.p>
         </AnimatePresence>
       </div>
 

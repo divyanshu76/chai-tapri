@@ -460,12 +460,13 @@ export default function BackgroundScene({ sceneId, reducedMotion = false }) {
     Object.entries(scene.cssVars).forEach(([k, v]) => root.style.setProperty(k, v));
   }, [scene]);
 
-  // Preload all 3 images to avoid blank frames
+  // Preload all 4 images to avoid blank frames on load and window resize
   useEffect(() => {
     const urls = [
-      '/assets/backgrounds/chai1.jpg',
-      '/assets/backgrounds/chai2.jpg',
-      '/assets/backgrounds/chai3.jpg'
+      '/assets/backgrounds/chai-desktop-1.jpg',
+      '/assets/backgrounds/chai-desktop-2.jpg',
+      '/assets/backgrounds/chai-mobile-1.jpg',
+      '/assets/backgrounds/chai-mobile-2.jpg'
     ];
     urls.forEach(url => {
       const img = new Image();
@@ -478,21 +479,18 @@ export default function BackgroundScene({ sceneId, reducedMotion = false }) {
       <AnimatePresence>
         <motion.div
           key={sceneId}
-          style={{ position: 'absolute', top: '-10%', left: '-10%', width: '120%', height: '120%' }}
-          initial={{ opacity: 0, scale: 1.0 }}
-          animate={{ opacity: 1, scale: reducedMotion ? 1.0 : 1.08 }}
-          exit={{ opacity: 0, scale: reducedMotion ? 1.0 : 1.08 }}
-          transition={{
-            opacity: { duration: 1.8, ease: 'linear' },
-            scale: { duration: 60, ease: 'linear' },
-          }}
+          style={{ position: 'absolute', inset: 0 }}
+          initial={{ opacity: 0, zIndex: 2 }}
+          animate={{ opacity: 1, zIndex: 2 }}
+          exit={{ opacity: 1, zIndex: 1 }}
+          transition={{ duration: 1.5, ease: 'easeInOut' }}
         >
-          {scene?.imageUrl ? (
+          {scene?.desktopImage && scene?.mobileImage ? (
             /* ─── PHOTO MODE ─── */
             <>
               <div style={{
                 position: 'absolute', inset: 0,
-                backgroundImage: `url(${scene.imageUrl})`,
+                backgroundImage: `url(${isMobile ? scene.mobileImage : scene.desktopImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: isMobile ? (scene.mobilePosition || 'center') : (scene.desktopPosition || 'center'),
               }} />

@@ -161,7 +161,7 @@ export default function App() {
     const nextScene = songIndexToSceneId(index);
     setSceneId(nextScene);
     // setSongIndex(index);
-    const sceneToAudio = { 1: 'evening', 2: 'rain', 3: 'midnight' };
+    const sceneToAudio = { 1: 'evening', 2: 'midnight' };
     setAmbientScene(sceneToAudio[nextScene] ?? 'evening');
     
     // Immediately trigger a new shayari when song changes
@@ -201,13 +201,6 @@ export default function App() {
   }, [setAmbientScene]);
 
   /* ── Interactive env elements ──────────────────────────────── */
-  const handleBulbClick = useCallback(() => {
-    setBulbBrightness((b) => {
-      const next = b >= 1 ? 0.68 : 1;
-      if (next < 1) showToast('Roshni thodi kam kar di…', 'top-center', 2200);
-      return next;
-    });
-  }, [showToast]);
 
   const handleBenchClick = useCallback(() => {
     showToast(
@@ -381,63 +374,9 @@ export default function App() {
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '0.55rem',
                 pointerEvents: 'auto',
-                marginBottom: isMobile ? '90px' : 0, 
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
-                  {/* Bulb */}
-                  <motion.button
-                    onClick={handleBulbClick}
-                    whileHover={{ scale: 1.14 }}
-                    whileTap={{ scale: 0.88 }}
-                    aria-label="Toggle bulb brightness"
-                    title="Bulb"
-                    style={{
-                      fontSize: 'clamp(0.9rem, 2.2vw, 1.05rem)',
-                      filter: `brightness(${bulbBrightness}) drop-shadow(0 0 ${bulbBrightness >= 1 ? 8 : 2}px rgba(200,140,30,${bulbBrightness >= 1 ? 0.65 : 0.2}))`,
-                      transition: 'filter 0.65s',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: 0
-                    }}
-                  >💡</motion.button>
-                </div>
-
-                {/* Instagram Handle */}
-                <motion.a
-                  href="https://www.instagram.com/truly_divyanshu/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram — @truly_divyanshu"
-                  whileHover={{ scale: 1.05, y: -2, opacity: 1 }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    textDecoration: 'none',
-                    color: '#FFF4DF',
-                    opacity: 0.85,
-                    fontSize: '13px',
-                    fontFamily: 'var(--font-sans)',
-                    fontWeight: 400,
-                    textShadow: '0 1px 4px rgba(60,30,10,0.6)',
-                    padding: '4px 0',
-                    outline: 'none',
-                  }}
-                  onFocus={(e) => { e.currentTarget.style.opacity = 1; e.currentTarget.style.textDecoration = 'underline'; }}
-                  onBlur={(e) => { e.currentTarget.style.opacity = 0.85; e.currentTarget.style.textDecoration = 'none'; }}
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                  </svg>
-                  @truly_divyanshu
-                </motion.a>
-              </div>
+                width: isMobile ? '0' : '100px' // Placeholder to balance flex layout if needed
+              }} />
 
               {/* Bottom Center: Bottom-Stage (Shayari + Player) */}
               <div style={{
