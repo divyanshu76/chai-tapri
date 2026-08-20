@@ -57,11 +57,26 @@ export default function MusicPlayer({
   duration,
   onPlayPause,
   onNext,
-  onPrev
+  onPrev,
+  onSeek
 }) {
+  const [isSeeking, setIsSeeking] = React.useState(false);
+  const [seekValue, setSeekValue] = React.useState(0);
+
   if (!isReady) return null;
 
-  const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const displayTime = isSeeking ? seekValue : (currentTime || 0);
+  const progressPct = duration > 0 ? (displayTime / duration) * 100 : 0;
+  
+  const handleSeekChange = (e) => {
+    setIsSeeking(true);
+    setSeekValue(parseFloat(e.target.value));
+  };
+  
+  const handleSeekEnd = (e) => {
+    setIsSeeking(false);
+    onSeek?.(parseFloat(e.target.value));
+  };
   
   const formatTime = (secs) => {
     if (!secs || isNaN(secs)) return '0:00';
@@ -102,6 +117,42 @@ export default function MusicPlayer({
             @keyframes vinylSpin {
               from { transform: rotate(0deg); }
               to { transform: rotate(360deg); }
+            }
+            .seek-slider {
+              -webkit-appearance: none;
+              appearance: none;
+              background: transparent;
+            }
+            .seek-slider::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              width: 12px;
+              height: 12px;
+              background: #FFF;
+              border-radius: 50%;
+              cursor: pointer;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+              opacity: 0;
+              transition: opacity 0.2s;
+            }
+            .seek-slider:hover::-webkit-slider-thumb,
+            .seek-slider:active::-webkit-slider-thumb {
+              opacity: 1;
+            }
+            .seek-slider::-moz-range-thumb {
+              width: 12px;
+              height: 12px;
+              background: #FFF;
+              border-radius: 50%;
+              cursor: pointer;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+              border: none;
+              opacity: 0;
+              transition: opacity 0.2s;
+            }
+            .seek-slider:hover::-moz-range-thumb,
+            .seek-slider:active::-moz-range-thumb {
+              opacity: 1;
             }
           `}
         </style>
@@ -173,30 +224,40 @@ export default function MusicPlayer({
 
           <div style={{ display: 'flex', flexDirection: 'column', marginTop: '4px', gap: '4px' }}>
             {/* Progress Bar */}
-            <div style={{
-              width: '100%',
-              height: 4,
-              background: 'rgba(255, 255, 255, 0.2)',
-              borderRadius: 2,
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                height: '100%',
-                width: `${progressPct}%`,
-                background: 'rgba(255, 255, 255, 0.5)',
-                borderRadius: 2,
-                transition: 'width 0.5s linear'
-              }} />
-            </div>
+            <input
+              type="range"
+              min="0"
+              max={duration || 100}
+              step="0.1"
+              value={displayTime}
+              onChange={handleSeekChange}
+              onMouseUp={handleSeekEnd}
+              onTouchEnd={handleSeekEnd}
+              onKeyUp={(e) => {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                  handleSeekEnd(e);
+                }
+              }}
+              style={{
+                width: '100%',
+                height: '4px',
+                background: `linear-gradient(to right, rgba(255, 255, 255, 0.5) ${progressPct}%, rgba(255, 255, 255, 0.2) ${progressPct}%)`,
+                borderRadius: '2px',
+                outline: 'none',
+                cursor: 'pointer',
+                touchAction: 'none'
+              }}
+              className="seek-slider"
+              aria-label="Seek progress"
+            />
             
             {/* Time */}
             <span style={{ 
-              fontFamily: 'var(--font-sans)', 
-              fontSize: '0.75rem', 
-              color: 'rgba(255, 255, 255, 0.6)', 
-              fontVariantNumeric: 'tabular-nums',
+              fontSize: '10px', 
+              color: 'rgba(255, 255, 255, 0.6)',
+              fontFamily: 'monospace'
             }}>
-              {formatTime(currentTime)} / {formatTime(duration)}
+              {formatTime(displayTime)} / {formatTime(duration || 0)}
             </span>
           </div>
         </div>

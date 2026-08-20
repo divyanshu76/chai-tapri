@@ -406,6 +406,7 @@ export default function App() {
                     onPlayPause={togglePlay}
                     onNext={nextTrack}
                     onPrev={prevTrack}
+                    onSeek={seekTo}
                   />
                 </div>
               </div>
